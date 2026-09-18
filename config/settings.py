@@ -8,7 +8,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
-    'products',
+    'students',
 ]
 
 MIDDLEWARE = [
