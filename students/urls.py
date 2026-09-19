@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import course, student
+from .views import CourseView, StudentView
 
 urlpatterns = [
-    path('students/', student),
-    path('courses/', course),
+    path('students/', StudentView.as_view()),
+    path('courses/', CourseView.as_view()),
 ]
