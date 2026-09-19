@@ -3,31 +3,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import Student
+from .serializers import StudentSerializer
 
 
 @api_view(['GET', 'POST'])
 def student(req):
     if req.method == 'GET':
-        rows = Student.objects.values('id', 'name', 'age', 'course')
-        return Response(list(rows))
+        data = StudentSerializer(Student.objects.all(), many=True)
+        return Response(data.data)
 
-    name = req.data.get('name')
-    age = req.data.get('age')
-    course = req.data.get('course')
+    data = StudentSerializer(data=req.data)
+    if data.is_valid():
+        data.save()
+        return Response(data.data, status=status.HTTP_201_CREATED)
 
-    if not name or age is None or not course:
-        return Response(
-            {'error': 'Please enter the name, age and course.'},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    item = Student.objects.create(name=name, age=age, course=course)
-    return Response(
-        {
-            'id': item.id,
-            'name': item.name,
-            'age': item.age,
-            'course': item.course,
-        },
-        status=status.HTTP_201_CREATED,
-    )
+    return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
