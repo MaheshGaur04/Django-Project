@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -7,6 +8,8 @@ from .serializers import CourseSerializer, StudentSerializer
 
 
 class CourseView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         data = CourseSerializer(Course.objects.all(), many=True)
         return Response(data.data)
@@ -22,3 +25,4 @@ class CourseView(APIView):
 class StudentView(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated]
